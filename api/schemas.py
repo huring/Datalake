@@ -53,3 +53,70 @@ class EventRead(BaseModel):
     created_at: str
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class EventsPage(BaseModel):
+    data: list[EventRead]
+    page: int
+    page_size: int
+    total: int
+    total_pages: int
+
+
+class EventQueryParams(BaseModel):
+    source: str | None = None
+    event_type: str | None = None
+    timestamp_from: str | None = None
+    timestamp_to: str | None = None
+    page: int = 1
+    page_size: int = 25
+    order: str = "desc"
+
+    model_config = ConfigDict(extra="forbid")
+
+    @field_validator("source")
+    @classmethod
+    def validate_query_source(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        if not SOURCE_PATTERN.fullmatch(value):
+            raise ValueError("source must use lowercase snake_case or dot notation")
+        return value
+
+    @field_validator("event_type")
+    @classmethod
+    def validate_query_event_type(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        if not value.strip():
+            raise ValueError("event_type cannot be empty")
+        return value
+
+    @field_validator("timestamp_from", "timestamp_to")
+    @classmethod
+    def validate_query_timestamp(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
+        return _validate_timestamp(value)
+
+    @field_validator("page")
+    @classmethod
+    def validate_page(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("page must be at least 1")
+        return value
+
+    @field_validator("page_size")
+    @classmethod
+    def validate_page_size(cls, value: int) -> int:
+        if value < 1 or value > 100:
+            raise ValueError("page_size must be between 1 and 100")
+        return value
+
+    @field_validator("order")
+    @classmethod
+    def validate_order(cls, value: str) -> str:
+        normalized = value.lower()
+        if normalized not in {"asc", "desc"}:
+            raise ValueError("order must be asc or desc")
+        return normalized
