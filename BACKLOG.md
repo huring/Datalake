@@ -60,13 +60,14 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 
 ### Card 07 - Sources endpoint
 - Goal: Add `GET /sources` so consumers can inspect the registry of known producers.
-- Status: In progress.
+- Status: Done.
 - Depends on: Card 03.
 - Deliverable: A read-only sources listing endpoint with metadata and event counts.
 - Acceptance criteria: Source metadata reflects insert activity and returns in a stable JSON shape.
 
 ### Card 08 - MCP server skeleton and transport
 - Goal: Stand up the MCP server as a LAN-accessible SSE service that is usable from any computer or phone on the home network.
+- Status: In progress.
 - Depends on: Card 02 and Card 04.
 - Deliverable: A generic MCP server entrypoint that can connect to the API and expose tools over SSE.
 - Acceptance criteria: The server starts in Docker, publishes a stable SSE endpoint, and does not depend on `stdio` for the primary path.

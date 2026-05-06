@@ -1,2 +1,3 @@
-# Intentionally empty for the Card 01 scaffold.
-
+fastmcp
+httpx
+uvicorn
