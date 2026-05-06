@@ -146,3 +146,18 @@ class EventQueryParams(BaseModel):
         if normalized not in {"asc", "desc"}:
             raise ValueError("order must be asc or desc")
         return normalized
+
+
+class SourceRead(BaseModel):
+    id: str
+    display_name: str
+    description: str | None
+    first_seen_at: str
+    last_seen_at: str
+    event_count: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class SourcesList(BaseModel):
+    data: list[SourceRead]

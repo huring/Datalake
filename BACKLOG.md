@@ -34,7 +34,7 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 
 ### Card 03 - Database layer and initial migrations
 - Goal: Implement SQLAlchemy models, session management, and Alembic bootstrap for the initial schema.
-- Status: In progress.
+- Status: Done.
 - Depends on: Card 02.
 - Deliverable: `events` and `sources` tables with the indexes and column types described in the plan.
 - Acceptance criteria: Fresh database creation works from migration, and the ORM models match the documented schema.
@@ -53,12 +53,14 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 
 ### Card 06 - Batch ingest endpoint
 - Goal: Add `POST /events/batch` with partial success reporting and a request-size limit.
+- Status: Done.
 - Depends on: Card 04.
 - Deliverable: Bulk event ingestion with per-item validation feedback.
 - Acceptance criteria: Mixed-validity batches return a multi-status style response, and the documented max batch size is enforced.
 
 ### Card 07 - Sources endpoint
 - Goal: Add `GET /sources` so consumers can inspect the registry of known producers.
+- Status: In progress.
 - Depends on: Card 03.
 - Deliverable: A read-only sources listing endpoint with metadata and event counts.
 - Acceptance criteria: Source metadata reflects insert activity and returns in a stable JSON shape.
