@@ -1,48 +1,50 @@
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-import json
-import os
-from pathlib import Path
+from contextlib import asynccontextmanager
+import logging
+
+from fastapi import Depends, FastAPI, APIRouter
+
+from auth import require_token
+from config import get_settings
+from database import check_database_readiness
 
 
-VERSION = "card-01-scaffold"
+settings = get_settings()
+logging.basicConfig(level=settings.log_level.upper())
+logger = logging.getLogger("datalake.api")
 
 
-class Handler(BaseHTTPRequestHandler):
-    def _write_json(self, status: int, payload: dict[str, object]) -> None:
-        body = json.dumps(payload).encode("utf-8")
-        self.send_response(status)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
-
-    def do_GET(self) -> None:  # noqa: N802 - required by BaseHTTPRequestHandler
-        if self.path in {"/", "/health"}:
-            data_dir = Path(os.environ.get("DATA_DIR", "/data"))
-            self._write_json(
-                200,
-                {
-                    "service": "api",
-                    "status": "running",
-                    "version": VERSION,
-                    "data_dir": str(data_dir),
-                },
-            )
-            return
-
-        self._write_json(404, {"error": "not_found"})
-
-    def log_message(self, format: str, *args) -> None:  # noqa: A003 - Base API
-        return
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("starting api", extra={"version": settings.app_version})
+    yield
 
 
-def main() -> None:
-    port = int(os.environ.get("API_PORT", "8000"))
-    data_dir = Path(os.environ.get("DATA_DIR", "/data"))
-    data_dir.mkdir(parents=True, exist_ok=True)
-    server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
-    server.serve_forever()
+app = FastAPI(
+    title="Homelab Data Lake API",
+    version=settings.app_version,
+    lifespan=lifespan,
+)
+
+protected_router = APIRouter(dependencies=[Depends(require_token)])
 
 
-if __name__ == "__main__":
-    main()
+@app.get("/health", include_in_schema=False)
+async def health() -> dict[str, object]:
+    db_status = check_database_readiness()
+    return {
+        "status": "ok" if db_status["status"] == "ok" else "degraded",
+        "db": db_status,
+        "version": settings.app_version,
+    }
+
+
+@protected_router.get("/")
+async def root() -> dict[str, str]:
+    return {
+        "service": "api",
+        "status": "running",
+        "version": settings.app_version,
+    }
+
+
+app.include_router(protected_router)

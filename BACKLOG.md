@@ -20,6 +20,7 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 
 ### Card 01 - Repo scaffold and runtime wiring
 - Goal: Create the initial project structure from the plan, including API and MCP service directories, environment examples, and Docker Compose wiring.
+- Status: Done.
 - Depends on: None.
 - Deliverable: The repo builds into separate API and MCP containers with a shared LAN network and a persisted data volume.
 - Acceptance criteria: `docker-compose up` starts both services, the API health endpoint is reachable, and the MCP service can reach the API over the internal network.

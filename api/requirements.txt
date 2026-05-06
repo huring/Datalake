@@ -1,1 +1,3 @@
-# Intentionally empty for the smoke-test scaffold.
+fastapi==0.115.8
+pydantic-settings==2.7.1
+uvicorn[standard]==0.34.0

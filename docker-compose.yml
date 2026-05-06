@@ -12,6 +12,8 @@ services:
       - "${API_PORT:-8000}:8000"
     environment:
       API_TOKEN: ${API_TOKEN:-change-me}
+      DATABASE_URL: sqlite:////data/datalake.db
+      LOG_LEVEL: ${LOG_LEVEL:-info}
       DATA_DIR: /data
       API_PORT: 8000
     volumes:
