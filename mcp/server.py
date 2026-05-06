@@ -1,4 +1,4 @@
-# version: mcp-smoke-20260506-1
+# version: mcp-smoke-20260506-2
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
