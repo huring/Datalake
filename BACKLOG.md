@@ -27,12 +27,14 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 
 ### Card 02 - API configuration, auth, and health check
 - Goal: Implement config loading, bearer-token auth, and the unauthenticated health endpoint.
+- Status: Done.
 - Depends on: Card 01.
 - Deliverable: A FastAPI app that reads environment variables, enforces auth on non-health routes, and reports basic DB readiness.
 - Acceptance criteria: Missing or invalid tokens return 401, `/health` returns 200 without auth, and startup failures are visible in logs.
 
 ### Card 03 - Database layer and initial migrations
 - Goal: Implement SQLAlchemy models, session management, and Alembic bootstrap for the initial schema.
+- Status: In progress.
 - Depends on: Card 02.
 - Deliverable: `events` and `sources` tables with the indexes and column types described in the plan.
 - Acceptance criteria: Fresh database creation works from migration, and the ORM models match the documented schema.
