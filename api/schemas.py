@@ -135,8 +135,8 @@ class EventQueryParams(BaseModel):
     @field_validator("page_size")
     @classmethod
     def validate_page_size(cls, value: int) -> int:
-        if value < 1 or value > 100:
-            raise ValueError("page_size must be between 1 and 100")
+        if value < 1 or value > 500:
+            raise ValueError("page_size must be between 1 and 500")
         return value
 
     @field_validator("order")

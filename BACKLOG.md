@@ -67,19 +67,21 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 
 ### Card 08 - MCP server skeleton and transport
 - Goal: Stand up the MCP server as a LAN-accessible SSE service that is usable from any computer or phone on the home network.
-- Status: In progress.
+- Status: Done.
 - Depends on: Card 02 and Card 04.
 - Deliverable: A generic MCP server entrypoint that can connect to the API and expose tools over SSE.
 - Acceptance criteria: The server starts in Docker, publishes a stable SSE endpoint, and does not depend on `stdio` for the primary path.
 
 ### Card 09 - MCP read tool
 - Goal: Implement `query_datalake_events` as the read path for any MCP-capable client.
+- Status: Done.
 - Depends on: Card 08 and Card 05.
 - Deliverable: A tool that proxies the API query endpoint with the same filters and pagination semantics.
 - Acceptance criteria: The tool returns predictable structured results, handles empty sets, and surfaces API errors clearly.
 
 ### Card 10 - MCP write tool
 - Goal: Implement `log_datalake_event` as the write path for any MCP-capable client.
+- Status: Done.
 - Depends on: Card 08 and Card 04.
 - Deliverable: A thin POST wrapper that inserts structured events into the API.
 - Acceptance criteria: Valid tool calls create events, malformed calls fail cleanly, and the tool contract stays model-agnostic.
