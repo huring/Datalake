@@ -1,10 +1,14 @@
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
+from pathlib import Path
+
+
+VERSION = "card-01-scaffold"
 
 
 class Handler(BaseHTTPRequestHandler):
-    def _write_json(self, status: int, payload: dict[str, str]) -> None:
+    def _write_json(self, status: int, payload: dict[str, object]) -> None:
         body = json.dumps(payload).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
@@ -14,7 +18,16 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802 - required by BaseHTTPRequestHandler
         if self.path in {"/", "/health"}:
-            self._write_json(200, {"service": "api", "status": "running"})
+            data_dir = Path(os.environ.get("DATA_DIR", "/data"))
+            self._write_json(
+                200,
+                {
+                    "service": "api",
+                    "status": "running",
+                    "version": VERSION,
+                    "data_dir": str(data_dir),
+                },
+            )
             return
 
         self._write_json(404, {"error": "not_found"})
@@ -25,6 +38,8 @@ class Handler(BaseHTTPRequestHandler):
 
 def main() -> None:
     port = int(os.environ.get("API_PORT", "8000"))
+    data_dir = Path(os.environ.get("DATA_DIR", "/data"))
+    data_dir.mkdir(parents=True, exist_ok=True)
     server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
     server.serve_forever()
 

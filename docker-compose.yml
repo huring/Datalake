@@ -1,5 +1,8 @@
 services:
   api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     image: ghcr.io/${GHCR_OWNER:-huring}/datalake-api:latest
     container_name: datalake-api
     restart: unless-stopped
@@ -9,8 +12,20 @@ services:
       - "${API_PORT:-8000}:8000"
     environment:
       API_TOKEN: ${API_TOKEN:-change-me}
+      DATA_DIR: /data
+      API_PORT: 8000
+    volumes:
+      - datalake-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   mcp:
+    build:
+      context: ./mcp
+      dockerfile: Dockerfile
     image: ghcr.io/${GHCR_OWNER:-huring}/datalake-mcp:latest
     container_name: datalake-mcp
     restart: unless-stopped
@@ -18,5 +33,20 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
     ports:
       - "${MCP_PORT:-8001}:8001"
+    environment:
+      DATALAKE_API_URL: http://api:8000
+      MCP_PORT: 8001
     depends_on:
       - api
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  datalake-data:
+
+networks:
+  default:
+    name: datalake
