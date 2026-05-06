@@ -63,6 +63,32 @@ class EventsPage(BaseModel):
     total_pages: int
 
 
+class BatchError(BaseModel):
+    index: int
+    code: str
+    message: str
+
+
+class BatchIngestResult(BaseModel):
+    inserted: int
+    errors: list[BatchError]
+
+
+class BatchIngestRequest(BaseModel):
+    events: list[dict[str, Any]]
+
+    model_config = ConfigDict(extra="forbid")
+
+    @field_validator("events")
+    @classmethod
+    def validate_events_size(cls, value: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        if not value:
+            raise ValueError("events must not be empty")
+        if len(value) > 500:
+            raise ValueError("events must not exceed 500 items")
+        return value
+
+
 class EventQueryParams(BaseModel):
     source: str | None = None
     event_type: str | None = None

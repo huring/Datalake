@@ -8,7 +8,16 @@ from sqlalchemy.orm import Session
 from auth import require_token
 from database import get_db
 from models import Event, Source
-from schemas import EventCreate, EventQueryParams, EventRead, EventsPage
+from pydantic import ValidationError
+from schemas import (
+    BatchError,
+    BatchIngestRequest,
+    BatchIngestResult,
+    EventCreate,
+    EventQueryParams,
+    EventRead,
+    EventsPage,
+)
 
 
 router = APIRouter(
@@ -55,6 +64,14 @@ def _parse_query(
 
 @router.post("/events", status_code=status.HTTP_201_CREATED, response_model=EventRead)
 def create_event(body: EventCreate, db: Session = Depends(get_db)) -> EventRead:
+    event = _create_event_record(body, db)
+    db.commit()
+    db.refresh(event)
+
+    return _serialize_event(event)
+
+
+def _create_event_record(body: EventCreate, db: Session) -> Event:
     source = db.get(Source, body.source)
     if source is None:
         source = Source(
@@ -78,10 +95,7 @@ def create_event(body: EventCreate, db: Session = Depends(get_db)) -> EventRead:
         payload=json.dumps(body.payload, separators=(",", ":")),
     )
     db.add(event)
-    db.commit()
-    db.refresh(event)
-
-    return _serialize_event(event)
+    return event
 
 
 @router.get("/events", response_model=EventsPage)
@@ -130,3 +144,38 @@ def get_event(event_id: str, db: Session = Depends(get_db)) -> EventRead:
     if event is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="event not found")
     return _serialize_event(event)
+
+
+@router.post("/events/batch", response_model=BatchIngestResult, status_code=status.HTTP_207_MULTI_STATUS)
+def ingest_events_batch(
+    body: BatchIngestRequest, db: Session = Depends(get_db)
+) -> BatchIngestResult:
+    inserted = 0
+    errors: list[BatchError] = []
+
+    with db.begin():
+        for index, event_body in enumerate(body.events):
+            try:
+                with db.begin_nested():
+                    validated = EventCreate.model_validate(event_body)
+                    _create_event_record(validated, db)
+                    db.flush()
+                inserted += 1
+            except ValidationError as exc:
+                errors.append(
+                    BatchError(
+                        index=index,
+                        code="VALIDATION_ERROR",
+                        message=exc.errors()[0]["msg"] if exc.errors() else str(exc),
+                    )
+                )
+            except Exception as exc:  # noqa: BLE001 - batch ingest should isolate item failures
+                errors.append(
+                    BatchError(
+                        index=index,
+                        code="INTERNAL_ERROR",
+                        message=str(exc),
+                    )
+                )
+
+    return BatchIngestResult(inserted=inserted, errors=errors)
