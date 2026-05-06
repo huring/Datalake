@@ -1,0 +1,18 @@
+services:
+  api:
+    image: ghcr.io/${GHCR_OWNER:-huring}/datalake-api:latest
+    container_name: datalake-api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      API_TOKEN: ${API_TOKEN:-change-me}
+
+  mcp:
+    image: ghcr.io/${GHCR_OWNER:-huring}/datalake-mcp:latest
+    container_name: datalake-mcp
+    restart: unless-stopped
+    ports:
+      - "${MCP_PORT:-8001}:8001"
+    depends_on:
+      - api
