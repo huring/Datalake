@@ -4,6 +4,7 @@ from typing import Any, TypedDict
 
 import httpx
 from fastmcp import FastMCP
+from fastmcp.server.dependencies import get_access_token
 from starlette.requests import Request
 from starlette.responses import JSONResponse, PlainTextResponse
 
@@ -25,8 +26,15 @@ def _api_base_url() -> str:
     return os.environ.get("DATALAKE_API_URL", DEFAULT_API_URL).rstrip("/")
 
 
+def _api_token() -> str:
+    token = get_access_token()
+    if token is not None and token.token:
+        return token.token
+    return os.environ.get("DATALAKE_API_TOKEN", "")
+
+
 def _api_headers() -> dict[str, str]:
-    token = os.environ.get("DATALAKE_API_TOKEN", "")
+    token = _api_token()
     return {"Authorization": f"Bearer {token}"} if token else {}
 
 
