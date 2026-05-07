@@ -95,13 +95,14 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 - Deliverable: A documented HA automation that emits `apple_tv` `watch.started` events.
 - Acceptance criteria: The automation posts valid payloads, handles reconnect flicker, and records enough metadata for downstream consumers.
 
-## Implementation Cards
-
 ### Card 12 - Home Assistant Roborock automation
 - Goal: Push vacuum completion events into the datalake from Home Assistant.
+- Status: Done.
 - Depends on: Card 04 and Card 10.
 - Deliverable: A documented HA automation that emits `roborock` `clean.completed` events.
 - Acceptance criteria: Dock-return events are captured reliably, and the payload includes the documented run stats.
+
+## Implementation Cards
 
 ### Card 13 - Home Assistant consumer docs
 - Goal: Document REST sensor patterns for reading recent events back from the datalake.
@@ -129,7 +130,7 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 
 ## Suggested Execution Slice
 
-If we want the next smallest useful milestone, build Cards 12 and 13 first. That gives us the remaining Home Assistant producer and the first read-back docs on top of the working API and MCP write path.
+If we want the next smallest useful milestone, build Cards 13 and 14 first. That gives us the read-back docs and Grafana query guidance on top of the working API and MCP write path.
 
 ## Out of Scope For v1
 
