@@ -18,9 +18,6 @@ Set these in your stack or `.env` file:
 - `MCP_PORT` default `8001`
 - `DATABASE_URL` default `sqlite:////data/datalake.db`
 - `LOG_LEVEL` default `info`
-- `MYAIR_EMAIL`
-- `MYAIR_PASSWORD`
-- `MYAIR_API_URL` default `https://myair.resmed.eu`
 - `POCKETCASTS_EMAIL`
 - `POCKETCASTS_PASSWORD`
 

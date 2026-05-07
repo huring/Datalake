@@ -12,7 +12,6 @@ jobs/
 ├── requirements.txt
 ├── crontab
 └── scripts/
-    ├── resmed_sync.py
     └── pocketcasts_sync.py
 ```
 
@@ -46,9 +45,6 @@ Add any additional dependencies here as new scripts are added.
 ## crontab
 
 ```
-# ResMed myAir — daily at 11:00
-0 11 * * * python3 /scripts/resmed_sync.py
-
 # Pocketcasts — every 2 hours
 0 */2 * * * python3 /scripts/pocketcasts_sync.py
 ```
@@ -71,9 +67,6 @@ datalake-jobs:
   environment:
     - DATALAKE_URL=http://api:8000
     - DATALAKE_TOKEN=${API_TOKEN}
-    - MYAIR_EMAIL=${MYAIR_EMAIL}
-    - MYAIR_PASSWORD=${MYAIR_PASSWORD}
-    - MYAIR_API_URL=${MYAIR_API_URL}
     - POCKETCASTS_EMAIL=${POCKETCASTS_EMAIL}
     - POCKETCASTS_PASSWORD=${POCKETCASTS_PASSWORD}
 ```
@@ -86,9 +79,6 @@ Add the following to the datalake stack in Portainer:
 
 | Variable | Description |
 |---|---|
-| `MYAIR_EMAIL` | email |
-| `MYAIR_PASSWORD` | password |
-| `MYAIR_API_URL` | api_url |
 | `POCKETCASTS_EMAIL` | email |
 | `POCKETCASTS_PASSWORD` | password |
 

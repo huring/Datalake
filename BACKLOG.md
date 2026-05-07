@@ -126,10 +126,10 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 
 ### Card 19 - ResMed myAir sync script
 - Goal: Pull nightly CPAP session data from ResMed myAir and store it as `health.sleep` events.
-- Status: Done.
+- Status: Superseded by Home Assistant.
 - Depends on: Card 18 and Card 05.
-- Deliverable: A scheduled sync script that logs in to myAir, deduplicates by night, and posts one datalake event per new session.
-- Acceptance criteria: The job is idempotent, skips already ingested nights, and fails cleanly when the upstream API or auth flow changes.
+- Deliverable: Replaced by the Home Assistant automation documented in [docs/home-assistant/resmed.md](./docs/home-assistant/resmed.md).
+- Acceptance criteria: Removed from the jobs container in favor of Home Assistant emitting the same event shape.
 
 ### Card 20 - Pocketcasts sync script
 - Goal: Pull listening history from Pocketcasts and store podcast listens as `media.podcast` events.

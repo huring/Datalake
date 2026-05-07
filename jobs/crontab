@@ -1,5 +1,2 @@
-# ResMed myAir sync disabled for now while the upstream API URL is unresolved.
-# Re-enable once the ResMed endpoint is confirmed.
-
 # Pocketcasts - every 2 hours
 0 */2 * * * python3 /scripts/pocketcasts_sync.py
