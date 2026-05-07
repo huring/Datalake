@@ -102,6 +102,13 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 - Deliverable: A documented HA automation that emits `roborock` `clean.completed` events.
 - Acceptance criteria: Dock-return events are captured reliably, and the payload includes the documented run stats.
 
+### Card 16 - API reference and rollout docs
+- Goal: Generate or publish the API reference and a short operator README for setup and backup.
+- Status: Done.
+- Depends on: Cards 04, 05, 06, 07.
+- Deliverable: Human-readable docs for the API, backups, and first-run startup.
+- Acceptance criteria: The README points to the right env vars, ports, and backup steps, and the API reference matches the implemented routes.
+
 ## Implementation Cards
 
 ### Card 13 - Home Assistant consumer docs
@@ -121,12 +128,6 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 - Depends on: Card 03.
 - Deliverable: A migration plan that covers the database URL swap, JSONB conversion, and data export/import.
 - Acceptance criteria: The migration steps are concrete enough to run without ad hoc reasoning, and SQLite behavior remains the default v1 path.
-
-### Card 16 - API reference and rollout docs
-- Goal: Generate or publish the API reference and a short operator README for setup and backup.
-- Depends on: Cards 04, 05, 06, 07.
-- Deliverable: Human-readable docs for the API, backups, and first-run startup.
-- Acceptance criteria: The README points to the right env vars, ports, and backup steps, and the API reference matches the implemented routes.
 
 ## Suggested Execution Slice
 
