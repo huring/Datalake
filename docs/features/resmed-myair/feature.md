@@ -2,6 +2,8 @@
 
 A daily sync script that pulls the previous night's CPAP session data from the ResMed myAir cloud API and stores it in the datalake as a `health.sleep` event.
 
+Runs as part of the `datalake-jobs` container — see [`docs/features/datalake-jobs/feature.md`](../datalake-jobs/feature.md) for the container setup.
+
 ## What it sends
 
 - `source`: `resmed_myair`
@@ -19,17 +21,18 @@ Payload fields:
 
 ## Implementation
 
-A standalone Python script that runs as a cron job. No container needed — runs directly on docker-main.
-
 ### File location
 
 ```
-/opt/integrations/resmed_sync.py
+jobs/scripts/resmed_sync.py
 ```
 
 ### Dependencies
 
-- `requests` (install via pip if not present)
+Add to `jobs/requirements.txt`:
+```
+requests
+```
 
 ### Auth flow
 
@@ -55,6 +58,14 @@ GET {MYAIR_API_URL}/v2/records
 Authorization: Bearer {token}
 ```
 
+### Datalake URL
+
+Inside the datalake stack, reach the API via the internal Docker network:
+
+```
+http://datalake-api:8000
+```
+
 ### Deduplication
 
 Before posting, check whether a record for that night already exists:
@@ -67,21 +78,24 @@ Skip the insert if `total > 0`. This makes the script safe to run multiple times
 
 ### Environment variables
 
-| Variable | Default | Description |
-|---|---|---|
-| `MYAIR_EMAIL` | — | ResMed myAir account email |
-| `MYAIR_PASSWORD` | — | ResMed myAir account password |
-| `MYAIR_API_URL` | `https://api.myair.resmed.eu` | Regional API base URL |
-| `DATALAKE_URL` | `http://docker.home:8000` | Datalake API base URL |
-| `DATALAKE_TOKEN` | `mytoken` | Datalake bearer token |
+Set in the datalake Portainer stack — shared with all containers in the stack:
+
+| Variable | Description |
+|---|---|
+| `MYAIR_EMAIL` | ResMed myAir account email |
+| `MYAIR_PASSWORD` | ResMed myAir account password |
+| `MYAIR_API_URL` | Regional API base URL (default: `https://api.myair.resmed.eu`) |
+| `DATALAKE_URL` | Set to `http://datalake-api:8000` inside the stack |
+| `DATALAKE_TOKEN` | Shared datalake bearer token |
 
 ### Cron schedule
 
-Run once daily at 08:00 — data from the previous night is typically available by then:
+Add to `jobs/crontab`:
+```
+0 8 * * * python3 /scripts/resmed_sync.py
+```
 
-```
-0 8 * * * python3 /opt/integrations/resmed_sync.py >> /var/log/resmed_sync.log 2>&1
-```
+Runs once daily at 08:00 — data from the previous night is typically available by then.
 
 ### Exit behaviour
 

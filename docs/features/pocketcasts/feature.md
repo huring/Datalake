@@ -2,6 +2,8 @@
 
 A scheduled sync script that pulls recent podcast listening history from the Pocketcasts API and stores new episodes in the datalake as `media.podcast` events.
 
+Runs as part of the `datalake-jobs` container — see [`docs/features/datalake-jobs/feature.md`](../datalake-jobs/feature.md) for the container setup.
+
 ## What it sends
 
 - `source`: `pocketcasts`
@@ -19,17 +21,18 @@ Payload fields:
 
 ## Implementation
 
-A standalone Python script that runs as a cron job. No container needed — runs directly on docker-main.
-
 ### File location
 
 ```
-/opt/integrations/pocketcasts_sync.py
+jobs/scripts/pocketcasts_sync.py
 ```
 
 ### Dependencies
 
-- `requests` (install via pip if not present)
+Add to `jobs/requirements.txt`:
+```
+requests
+```
 
 ### Auth flow
 
@@ -42,7 +45,7 @@ Content-Type: application/json
 {"email": "...", "password": "..."}
 ```
 
-Returns `{"token": "..."}`. Use this as a Bearer token for all subsequent requests.
+Returns `{"token": "..."}`. Use as a Bearer token for all subsequent requests.
 
 ### History endpoint
 
@@ -58,9 +61,17 @@ Returns a list of recently played episodes. Each episode includes:
 - `playedUpTo` — seconds listened
 - `publishedAt` — ISO 8601 publish date
 
+### Datalake URL
+
+Inside the datalake stack, reach the API via the internal Docker network:
+
+```
+http://datalake-api:8000
+```
+
 ### Deduplication
 
-The history endpoint always returns the same recent episodes regardless of when it's called. Before posting each episode, check whether it already exists in the datalake:
+The history endpoint always returns the same recent episodes regardless of when it's called. Before posting each episode, check whether it already exists:
 
 ```
 GET {DATALAKE_URL}/events?source=pocketcasts&event_type=media.podcast&timestamp_from=<start_of_publish_day>&timestamp_to=<end_of_publish_day>
@@ -70,20 +81,23 @@ Check the response for an event whose `payload.podcast` and `payload.title` matc
 
 ### Environment variables
 
-| Variable | Default | Description |
-|---|---|---|
-| `POCKETCASTS_EMAIL` | — | Pocketcasts account email |
-| `POCKETCASTS_PASSWORD` | — | Pocketcasts account password |
-| `DATALAKE_URL` | `http://docker.home:8000` | Datalake API base URL |
-| `DATALAKE_TOKEN` | `mytoken` | Datalake bearer token |
+Set in the datalake Portainer stack — shared with all containers in the stack:
+
+| Variable | Description |
+|---|---|
+| `POCKETCASTS_EMAIL` | Pocketcasts account email |
+| `POCKETCASTS_PASSWORD` | Pocketcasts account password |
+| `DATALAKE_URL` | Set to `http://datalake-api:8000` inside the stack |
+| `DATALAKE_TOKEN` | Shared datalake bearer token |
 
 ### Cron schedule
 
-Run every two hours — Pocketcasts syncs from the app periodically so this catches episodes shortly after they're listened to:
+Add to `jobs/crontab`:
+```
+0 */2 * * * python3 /scripts/pocketcasts_sync.py
+```
 
-```
-0 */2 * * * python3 /opt/integrations/pocketcasts_sync.py >> /var/log/pocketcasts_sync.log 2>&1
-```
+Runs every two hours — Pocketcasts syncs from the app periodically so this catches episodes shortly after they're listened to.
 
 ### Exit behaviour
 
