@@ -88,13 +88,14 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 - Deliverable: A thin POST wrapper that inserts structured events into the API.
 - Acceptance criteria: Valid tool calls create events, malformed calls fail cleanly, and the tool contract stays model-agnostic.
 
-## Implementation Cards
-
 ### Card 11 - Home Assistant Apple TV automation
 - Goal: Push Apple TV viewing events into the datalake from Home Assistant.
+- Status: Done.
 - Depends on: Card 04 and Card 10.
 - Deliverable: A documented HA automation that emits `apple_tv` `watch.started` events.
 - Acceptance criteria: The automation posts valid payloads, handles reconnect flicker, and records enough metadata for downstream consumers.
+
+## Implementation Cards
 
 ### Card 12 - Home Assistant Roborock automation
 - Goal: Push vacuum completion events into the datalake from Home Assistant.
@@ -128,7 +129,7 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 
 ## Suggested Execution Slice
 
-If we want the next smallest useful milestone, build Cards 11 and 12 first. That gives us the first real producers on top of the working API and MCP write path.
+If we want the next smallest useful milestone, build Cards 12 and 13 first. That gives us the remaining Home Assistant producer and the first read-back docs on top of the working API and MCP write path.
 
 ## Out of Scope For v1
 
