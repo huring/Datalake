@@ -3,7 +3,9 @@ from datetime import datetime
 from typing import Any, TypedDict
 
 import httpx
-from fastmcp import FastMCP
+from fastmcp import Context, FastMCP
+from fastmcp.server.dependencies import get_http_headers
+from fastmcp.server.middleware import Middleware, MiddlewareContext
 from starlette.requests import Request
 from starlette.responses import JSONResponse, PlainTextResponse
 
@@ -18,19 +20,37 @@ ALLOWED_WRITE_EVENT_TYPES = {
     "health.note",
 }
 
-mcp = FastMCP("Homelab Data Lake MCP")
+class SessionAuthMiddleware(Middleware):
+    async def on_request(self, context: MiddlewareContext, call_next):
+        headers = get_http_headers() or {}
+        auth_header = headers.get("authorization", "")
+        token = ""
+        if auth_header.lower().startswith("bearer "):
+            token = auth_header.split(" ", 1)[1].strip()
+
+        if token and context.fastmcp_context:
+            context.fastmcp_context.set_state("api_token", token)
+
+        return await call_next(context)
+
+
+mcp = FastMCP("Homelab Data Lake MCP", middleware=[SessionAuthMiddleware()])
 
 
 def _api_base_url() -> str:
     return os.environ.get("DATALAKE_API_URL", DEFAULT_API_URL).rstrip("/")
 
 
-def _api_token() -> str:
+async def _api_token(ctx: Context | None = None) -> str:
+    if ctx is not None:
+        session_token = await ctx.get_state("api_token")
+        if isinstance(session_token, str) and session_token:
+            return session_token
     return os.environ.get("MCP_API_TOKEN", "")
 
 
-def _api_headers() -> dict[str, str]:
-    token = _api_token()
+async def _api_headers(ctx: Context | None = None) -> dict[str, str]:
+    token = await _api_token(ctx)
     return {"Authorization": f"Bearer {token}"} if token else {}
 
 
@@ -43,10 +63,10 @@ def _normalize_iso8601(value: str | None) -> str | None:
     return value
 
 
-async def _fetch_api_health() -> dict[str, Any]:
+async def _fetch_api_health(ctx: Context | None = None) -> dict[str, Any]:
     try:
         async with httpx.AsyncClient(timeout=5) as client:
-            response = await client.get(f"{_api_base_url()}/health", headers=_api_headers())
+            response = await client.get(f"{_api_base_url()}/health", headers=await _api_headers(ctx))
             response.raise_for_status()
             return response.json()
     except Exception as exc:  # noqa: BLE001 - the health route should report upstream failures cleanly
@@ -71,6 +91,7 @@ class WriteResult(TypedDict):
 
 @mcp.tool
 async def query_datalake_events(
+    ctx: Context,
     source: str | None = None,
     event_type: str | None = None,
     since: str | None = None,
@@ -101,7 +122,7 @@ async def query_datalake_events(
             response = await client.get(
                 f"{_api_base_url()}/events",
                 params=params,
-                headers=_api_headers(),
+                headers=await _api_headers(ctx),
             )
             response.raise_for_status()
             payload = response.json()
@@ -123,6 +144,7 @@ async def query_datalake_events(
 
 @mcp.tool
 async def log_datalake_event(
+    ctx: Context,
     source: str,
     event_type: str,
     timestamp: str,
@@ -153,7 +175,7 @@ async def log_datalake_event(
             response = await client.post(
                 f"{_api_base_url()}/events",
                 json=body,
-                headers=_api_headers(),
+                headers=await _api_headers(ctx),
             )
             response.raise_for_status()
             created = response.json()
