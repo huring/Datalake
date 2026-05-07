@@ -25,11 +25,11 @@ services:
       retries: 3
 
   jobs:
-    build:
-      context: ./jobs
-      dockerfile: Dockerfile
+    image: ghcr.io/${GHCR_OWNER:-huring}/datalake-jobs:latest
     container_name: datalake-jobs
     restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
       - api
     environment:

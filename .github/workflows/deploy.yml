@@ -20,6 +20,8 @@ jobs:
             context: ./api
           - service: mcp
             context: ./mcp
+          - service: jobs
+            context: ./jobs
     permissions:
       contents: read
       packages: write

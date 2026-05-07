@@ -61,11 +61,13 @@ Add the service to the existing datalake `docker-compose.yml`:
 
 ```yaml
 datalake-jobs:
-  build: ./jobs
+  image: ghcr.io/${GHCR_OWNER}/datalake-jobs:latest
   container_name: datalake-jobs
   restart: unless-stopped
   depends_on:
     - datalake-api
+  labels:
+    - "com.centurylinklabs.watchtower.enable=true"
   environment:
     - DATALAKE_URL=http://datalake-api:8000
     - DATALAKE_TOKEN=${API_TOKEN}
@@ -94,16 +96,11 @@ Add the following to the datalake stack in Portainer:
 
 ## Build and deploy
 
-The image is built locally on docker-main — it does not go through ghcr.io or Watchtower. To deploy after changes:
+The jobs image is built by the GitHub Actions deploy workflow and pushed to `ghcr.io/${GHCR_OWNER}/datalake-jobs:latest` on every push to `main`.
 
-```bash
-# On docker-main
-docker rm -f datalake-jobs
-cd /path/to/datalake/repo
-docker build -t datalake-jobs ./jobs
-```
+The `datalake-jobs` service in `docker-compose.yml` points at that registry image, and Watchtower will pick up new pushes automatically when the container updates.
 
-Then redeploy the stack in Portainer.
+To deploy after changes, redeploy the stack in Portainer so it pulls the latest image and applies any new environment variables.
 
 ## Adding a new script
 
