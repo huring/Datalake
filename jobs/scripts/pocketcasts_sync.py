@@ -23,8 +23,8 @@ from common import (
 
 SOURCE = "pocketcasts"
 EVENT_TYPE = "media.podcast"
-PUBLISHED_KEYS = ("publishedAt", "published_at", "published")
-PODCAST_KEYS = ("podcast", "podcastName", "show")
+PUBLISHED_KEYS = ("published", "publishedAt", "published_at")
+PODCAST_KEYS = ("podcastTitle", "podcast", "podcastName", "show")
 TITLE_KEYS = ("title", "episodeTitle", "episode_title")
 DURATION_KEYS = ("duration", "durationSeconds", "duration_seconds")
 LISTENED_KEYS = ("playedUpTo", "played_up_to", "listened_seconds")
@@ -129,7 +129,7 @@ def _normalize_item(raw_item: dict[str, Any]) -> dict[str, Any]:
 
     parsed = parse_iso_datetime(str(published_at))
     if parsed.tzinfo is None or parsed.utcoffset() is None:
-        raise ValueError("publishedAt must include timezone information")
+        raise ValueError("published must include timezone information")
 
     if duration is None or listened is None:
         raise ValueError("missing duration/listened values")
