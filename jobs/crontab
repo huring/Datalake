@@ -1,0 +1,5 @@
+# ResMed myAir - daily at 11:00
+0 11 * * * python3 /scripts/resmed_sync.py
+
+# Pocketcasts - every 2 hours
+0 */2 * * * python3 /scripts/pocketcasts_sync.py

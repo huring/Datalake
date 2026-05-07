@@ -117,6 +117,13 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 - Deliverable: A loose-validated ingest router that maps Apple Health metrics and workouts into datalake events.
 - Acceptance criteria: Metrics and workouts are accepted via a permissive schema, mapping errors are skipped per item, and the batch never fails because of one bad sample.
 
+### Card 18 - Jobs container and scheduler
+- Goal: Add a `jobs/` service to the datalake stack that runs scheduled sync scripts inside the same Docker network.
+- Status: Done.
+- Depends on: Cards 01, 02, 04, and 05.
+- Deliverable: A lightweight container with cron scheduling, stdout logging, and stack env wiring for third-party sync jobs.
+- Acceptance criteria: The container starts in Compose and Portainer, can reach the internal API hostname, and consumes all external service credentials from stack environment variables rather than hardcoded secrets.
+
 ## Implementation Cards
 
 ### Card 13 - Home Assistant consumer docs
@@ -136,12 +143,6 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 - Depends on: Card 03.
 - Deliverable: A migration plan that covers the database URL swap, JSONB conversion, and data export/import.
 - Acceptance criteria: The migration steps are concrete enough to run without ad hoc reasoning, and SQLite behavior remains the default v1 path.
-
-### Card 18 - Jobs container and scheduler
-- Goal: Add a `jobs/` service to the datalake stack that runs scheduled sync scripts inside the same Docker network.
-- Depends on: Cards 01, 02, 04, and 05.
-- Deliverable: A lightweight container with cron scheduling, stdout logging, and stack env wiring for third-party sync jobs.
-- Acceptance criteria: The container starts in Compose and Portainer, can reach the internal API hostname, and consumes all external service credentials from stack environment variables rather than hardcoded secrets.
 
 ### Card 19 - ResMed myAir sync script
 - Goal: Pull nightly CPAP session data from ResMed myAir and store it as `health.sleep` events.

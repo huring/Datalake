@@ -24,6 +24,24 @@ services:
       timeout: 5s
       retries: 3
 
+  jobs:
+    build:
+      context: ./jobs
+      dockerfile: Dockerfile
+    image: datalake-jobs
+    container_name: datalake-jobs
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      DATALAKE_URL: http://api:8000
+      DATALAKE_TOKEN: ${API_TOKEN:-change-me}
+      MYAIR_EMAIL: ${MYAIR_EMAIL:-}
+      MYAIR_PASSWORD: ${MYAIR_PASSWORD:-}
+      MYAIR_API_URL: ${MYAIR_API_URL:-https://api.myair.resmed.eu}
+      POCKETCASTS_EMAIL: ${POCKETCASTS_EMAIL:-}
+      POCKETCASTS_PASSWORD: ${POCKETCASTS_PASSWORD:-}
+
   mcp:
     build:
       context: ./mcp

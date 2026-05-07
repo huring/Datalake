@@ -6,6 +6,7 @@ Small homelab event store with an API, MCP bridge, and Docker Compose deployment
 
 - API: `http://docker.home:8000`
 - MCP SSE: `http://docker.home:8001/sse`
+- Jobs container: `datalake-jobs` in the same stack
 
 ## Environment
 
@@ -17,8 +18,14 @@ Set these in your stack or `.env` file:
 - `MCP_PORT` default `8001`
 - `DATABASE_URL` default `sqlite:////data/datalake.db`
 - `LOG_LEVEL` default `info`
+- `MYAIR_EMAIL`
+- `MYAIR_PASSWORD`
+- `MYAIR_API_URL` default `https://api.myair.resmed.eu`
+- `POCKETCASTS_EMAIL`
+- `POCKETCASTS_PASSWORD`
 
 For the current deployment, `API_TOKEN` and `MCP_API_TOKEN` should usually be the same value.
+The jobs container uses `API_TOKEN` as its `DATALAKE_TOKEN` for API writes.
 
 ## Deploy
 
