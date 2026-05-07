@@ -111,6 +111,12 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 
 ## Implementation Cards
 
+### Card 17 - Apple Health import endpoint
+- Goal: Add `POST /ingest/apple-health` for Health Auto Export payloads.
+- Depends on: Card 04 and the existing event batch insert pattern.
+- Deliverable: A loose-validated ingest router that maps Apple Health metrics and workouts into datalake events.
+- Acceptance criteria: Metrics and workouts are accepted via a permissive schema, mapping errors are skipped per item, and the batch never fails because of one bad sample.
+
 ### Card 13 - Home Assistant consumer docs
 - Goal: Document REST sensor patterns for reading recent events back from the datalake.
 - Depends on: Card 05.
