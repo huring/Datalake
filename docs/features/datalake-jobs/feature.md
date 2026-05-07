@@ -84,11 +84,11 @@ Add the following to the datalake stack in Portainer:
 
 | Variable | Description |
 |---|---|
-| `MYAIR_EMAIL` | `lars.huring@gmail.com` |
-| `MYAIR_PASSWORD` | `9h2.VZ!hsTfiLhfj2Hmx` |
-| `MYAIR_API_URL` | `https://api.myair.resmed.eu` |
-| `POCKETCASTS_EMAIL` | `lars.huring@gmail.com` |
-| `POCKETCASTS_PASSWORD` | `Hur55ing` |
+| `MYAIR_EMAIL` | email |
+| `MYAIR_PASSWORD` | password |
+| `MYAIR_API_URL` | api_url |
+| `POCKETCASTS_EMAIL` | email |
+| `POCKETCASTS_PASSWORD` | password |
 
 `API_TOKEN`, `DATALAKE_URL` are already set in the stack.
 
