@@ -16,7 +16,7 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 6. Grafana and docs
 7. SQLite to Postgres migration path
 
-## Implementation Cards
+## Completed
 
 ### Card 01 - Repo scaffold and runtime wiring
 - Goal: Create the initial project structure from the plan, including API and MCP service directories, environment examples, and Docker Compose wiring.
@@ -41,12 +41,14 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 
 ### Card 04 - Single-event ingest endpoint
 - Goal: Add `POST /events` for event creation with validation, UUID generation, and source upsert behavior.
+- Status: Done.
 - Depends on: Card 03.
 - Deliverable: A working single-event ingestion path that stores events and updates source metadata.
 - Acceptance criteria: Valid events return 201, invalid payloads are rejected cleanly, and inserted events are retrievable.
 
 ### Card 05 - Event query endpoints
 - Goal: Add `GET /events` and `GET /events/:id` with filtering, sorting, pagination, and consistent error handling.
+- Status: Done.
 - Depends on: Card 04.
 - Deliverable: Read endpoints that match the response shapes in the plan.
 - Acceptance criteria: Source, type, and time-range filters work; pagination metadata is correct; missing IDs return 404.
@@ -86,6 +88,8 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 - Deliverable: A thin POST wrapper that inserts structured events into the API.
 - Acceptance criteria: Valid tool calls create events, malformed calls fail cleanly, and the tool contract stays model-agnostic.
 
+## Implementation Cards
+
 ### Card 11 - Home Assistant Apple TV automation
 - Goal: Push Apple TV viewing events into the datalake from Home Assistant.
 - Depends on: Card 04 and Card 10.
@@ -124,7 +128,7 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 
 ## Suggested Execution Slice
 
-If we want the smallest useful first milestone, build Cards 01 through 05 first. That gives us a working API with storage, auth, and query capability before layering on batch ingest, MCP, and Home Assistant automation.
+If we want the next smallest useful milestone, build Cards 11 and 12 first. That gives us the first real producers on top of the working API and MCP write path.
 
 ## Out of Scope For v1
 
