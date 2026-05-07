@@ -6,6 +6,7 @@ from fastapi import Depends, FastAPI, APIRouter
 from auth import require_token
 from config import get_settings
 from database import check_database_readiness
+from routers.apple_health import router as apple_health_router
 from routers.events import router as events_router
 from routers.sources import router as sources_router
 
@@ -51,4 +52,5 @@ async def root() -> dict[str, str]:
 
 app.include_router(protected_router)
 app.include_router(events_router)
+app.include_router(apple_health_router)
 app.include_router(sources_router)

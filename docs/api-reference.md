@@ -161,9 +161,37 @@ Response:
 }
 ```
 
+## Apple Health Ingest
+
+### `POST /ingest/apple-health`
+
+Ingest Apple Health Auto Export payloads.
+
+Request body:
+
+```json
+{
+  "data": {
+    "metrics": [],
+    "workouts": []
+  }
+}
+```
+
+Response: `201 Created`
+
+```json
+{
+  "received": 10,
+  "inserted": 8,
+  "errors": []
+}
+```
+
+The endpoint uses a permissive schema and silently skips individual samples that cannot be mapped to a datalake event.
+
 ## Error responses
 
 - `401 Unauthorized` for missing or invalid bearer tokens
 - `404 Not Found` for unknown event IDs
 - `422 Unprocessable Entity` for validation errors
-

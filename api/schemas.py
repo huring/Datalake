@@ -161,3 +161,22 @@ class SourceRead(BaseModel):
 
 class SourcesList(BaseModel):
     data: list[SourceRead]
+
+
+class AppleHealthImportData(BaseModel):
+    metrics: list[dict[str, Any]] = Field(default_factory=list)
+    workouts: list[dict[str, Any]] = Field(default_factory=list)
+
+    model_config = ConfigDict(extra="allow")
+
+
+class AppleHealthImportRequest(BaseModel):
+    data: AppleHealthImportData
+
+    model_config = ConfigDict(extra="allow")
+
+
+class AppleHealthImportResult(BaseModel):
+    received: int
+    inserted: int
+    errors: list[str]
