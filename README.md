@@ -20,7 +20,7 @@ Set these in your stack or `.env` file:
 - `LOG_LEVEL` default `info`
 - `MYAIR_EMAIL`
 - `MYAIR_PASSWORD`
-- `MYAIR_API_URL` default `https://api.myair.resmed.eu`
+- `MYAIR_API_URL` default `https://myair.resmed.eu`
 - `POCKETCASTS_EMAIL`
 - `POCKETCASTS_PASSWORD`
 

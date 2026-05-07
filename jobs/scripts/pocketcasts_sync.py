@@ -50,10 +50,12 @@ def main() -> int:
         if not token:
             raise RuntimeError("Pocketcasts login did not return a token")
 
-        history = api_get_json(
-            make_session(token),
+        history_response = make_session(token).post(
             "https://api.pocketcasts.com/user/history",
+            timeout=30,
         )
+        history_response.raise_for_status()
+        history = history_response.json()
         if isinstance(history, dict):
             items = history.get("history") or history.get("data") or history.get("items") or []
         elif isinstance(history, list):

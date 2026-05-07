@@ -37,7 +37,7 @@ services:
       DATALAKE_TOKEN: ${API_TOKEN:-change-me}
       MYAIR_EMAIL: ${MYAIR_EMAIL:-}
       MYAIR_PASSWORD: ${MYAIR_PASSWORD:-}
-      MYAIR_API_URL: ${MYAIR_API_URL:-https://api.myair.resmed.eu}
+      MYAIR_API_URL: ${MYAIR_API_URL:-https://myair.resmed.eu}
       POCKETCASTS_EMAIL: ${POCKETCASTS_EMAIL:-}
       POCKETCASTS_PASSWORD: ${POCKETCASTS_PASSWORD:-}
 

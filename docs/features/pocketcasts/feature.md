@@ -50,7 +50,7 @@ Returns `{"token": "..."}`. Use as a Bearer token for all subsequent requests.
 ### History endpoint
 
 ```
-GET https://api.pocketcasts.com/user/history
+POST https://api.pocketcasts.com/user/history
 Authorization: Bearer {token}
 ```
 
