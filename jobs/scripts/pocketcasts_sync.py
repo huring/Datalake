@@ -57,7 +57,7 @@ def main() -> int:
         history_response.raise_for_status()
         history = history_response.json()
         if isinstance(history, dict):
-            items = history.get("history") or history.get("data") or history.get("items") or []
+            items = history.get("episodes") or history.get("history") or history.get("data") or history.get("items") or []
         elif isinstance(history, list):
             items = history
         else:
