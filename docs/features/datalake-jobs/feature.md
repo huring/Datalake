@@ -46,8 +46,8 @@ Add any additional dependencies here as new scripts are added.
 ## crontab
 
 ```
-# ResMed myAir — daily at 08:00
-0 8 * * * python3 /scripts/resmed_sync.py
+# ResMed myAir — daily at 11:00
+0 11 * * * python3 /scripts/resmed_sync.py
 
 # Pocketcasts — every 2 hours
 0 */2 * * * python3 /scripts/pocketcasts_sync.py
@@ -84,11 +84,11 @@ Add the following to the datalake stack in Portainer:
 
 | Variable | Description |
 |---|---|
-| `MYAIR_EMAIL` | ResMed myAir account email |
-| `MYAIR_PASSWORD` | ResMed myAir account password |
+| `MYAIR_EMAIL` | `lars.huring@gmail.com` |
+| `MYAIR_PASSWORD` | `9h2.VZ!hsTfiLhfj2Hmx` |
 | `MYAIR_API_URL` | `https://api.myair.resmed.eu` |
-| `POCKETCASTS_EMAIL` | Pocketcasts account email |
-| `POCKETCASTS_PASSWORD` | Pocketcasts account password |
+| `POCKETCASTS_EMAIL` | `lars.huring@gmail.com` |
+| `POCKETCASTS_PASSWORD` | `Hur55ing` |
 
 `API_TOKEN`, `DATALAKE_URL` are already set in the stack.
 
