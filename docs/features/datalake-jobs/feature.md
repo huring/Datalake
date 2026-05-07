@@ -65,11 +65,11 @@ datalake-jobs:
   container_name: datalake-jobs
   restart: unless-stopped
   depends_on:
-    - datalake-api
+    - api
   labels:
     - "com.centurylinklabs.watchtower.enable=true"
   environment:
-    - DATALAKE_URL=http://datalake-api:8000
+    - DATALAKE_URL=http://api:8000
     - DATALAKE_TOKEN=${API_TOKEN}
     - MYAIR_EMAIL=${MYAIR_EMAIL}
     - MYAIR_PASSWORD=${MYAIR_PASSWORD}
@@ -78,7 +78,7 @@ datalake-jobs:
     - POCKETCASTS_PASSWORD=${POCKETCASTS_PASSWORD}
 ```
 
-`DATALAKE_URL` uses the internal Docker network hostname `datalake-api` — no external traffic needed.
+`DATALAKE_URL` uses the internal Docker network service name `api` — no external traffic needed. The `datalake-api` name is the container name, which is useful for local Docker commands but not the in-network hostname.
 
 ## Portainer stack environment variables
 
