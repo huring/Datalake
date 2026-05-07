@@ -32,7 +32,11 @@ def _api_token() -> str:
         token = auth_header.split(" ", 1)[1].strip()
         if token:
             return token
-    return os.environ.get("DATALAKE_API_TOKEN", "")
+    return (
+        os.environ.get("DATALAKE_API_TOKEN")
+        or os.environ.get("API_TOKEN")
+        or ""
+    )
 
 
 def _api_headers() -> dict[str, str]:
