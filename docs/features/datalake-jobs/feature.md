@@ -86,7 +86,7 @@ Add the following to the datalake stack in Portainer:
 |---|---|
 | `MYAIR_EMAIL` | ResMed myAir account email |
 | `MYAIR_PASSWORD` | ResMed myAir account password |
-| `MYAIR_API_URL` | `https://api.myair.resmed.eu` (EU) or `https://api.myair.io` (US) |
+| `MYAIR_API_URL` | `https://api.myair.resmed.eu` |
 | `POCKETCASTS_EMAIL` | Pocketcasts account email |
 | `POCKETCASTS_PASSWORD` | Pocketcasts account password |
 

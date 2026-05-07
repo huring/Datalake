@@ -38,9 +38,7 @@ requests
 
 The myAir API is not officially documented but has been reverse-engineered by the community. Check recent GitHub projects (search `myair api python` or `resmed myair reverse engineer`) for current working endpoints — the API has changed over time and endpoint paths may need to be verified.
 
-Known base URLs:
-- EU: `https://api.myair.resmed.eu`
-- US: `https://api.myair.io`
+API base URL (EU): `https://api.myair.resmed.eu`
 
 General auth pattern:
 ```
