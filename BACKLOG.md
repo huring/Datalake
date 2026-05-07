@@ -124,6 +124,20 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 - Deliverable: A lightweight container with cron scheduling, stdout logging, and stack env wiring for third-party sync jobs.
 - Acceptance criteria: The container starts in Compose and Portainer, can reach the internal API hostname, and consumes all external service credentials from stack environment variables rather than hardcoded secrets.
 
+### Card 19 - ResMed myAir sync script
+- Goal: Pull nightly CPAP session data from ResMed myAir and store it as `health.sleep` events.
+- Status: Done.
+- Depends on: Card 18 and Card 05.
+- Deliverable: A scheduled sync script that logs in to myAir, deduplicates by night, and posts one datalake event per new session.
+- Acceptance criteria: The job is idempotent, skips already ingested nights, and fails cleanly when the upstream API or auth flow changes.
+
+### Card 20 - Pocketcasts sync script
+- Goal: Pull listening history from Pocketcasts and store podcast listens as `media.podcast` events.
+- Status: Done.
+- Depends on: Card 18 and Card 05.
+- Deliverable: A scheduled sync script that logs in to Pocketcasts, deduplicates repeated history entries, and posts new podcast events to the datalake.
+- Acceptance criteria: The job only inserts new episodes, uses publish date as the event timestamp, and exits cleanly when no new history is available.
+
 ## Implementation Cards
 
 ### Card 13 - Home Assistant consumer docs
@@ -144,21 +158,9 @@ This backlog is ordered for implementation, not for design discussion. The goal 
 - Deliverable: A migration plan that covers the database URL swap, JSONB conversion, and data export/import.
 - Acceptance criteria: The migration steps are concrete enough to run without ad hoc reasoning, and SQLite behavior remains the default v1 path.
 
-### Card 19 - ResMed myAir sync script
-- Goal: Pull nightly CPAP session data from ResMed myAir and store it as `health.sleep` events.
-- Depends on: Card 18 and Card 05.
-- Deliverable: A scheduled sync script that logs in to myAir, deduplicates by night, and posts one datalake event per new session.
-- Acceptance criteria: The job is idempotent, skips already ingested nights, and fails cleanly when the upstream API or auth flow changes.
-
-### Card 20 - Pocketcasts sync script
-- Goal: Pull listening history from Pocketcasts and store podcast listens as `media.podcast` events.
-- Depends on: Card 18 and Card 05.
-- Deliverable: A scheduled sync script that logs in to Pocketcasts, deduplicates repeated history entries, and posts new podcast events to the datalake.
-- Acceptance criteria: The job only inserts new episodes, uses publish date as the event timestamp, and exits cleanly when no new history is available.
-
 ## Suggested Execution Slice
 
-If we want the next smallest useful milestone for the new feature set, build Card 18 first, then Cards 19 and 20. That gives us the shared jobs runtime and the two external syncs on top of the working API and query path.
+If we want the next smallest useful milestone for the remaining feature set, build Card 13 first, then Cards 14 and 15. Those are docs-only and keep the backlog moving without touching runtime code.
 
 ## Out of Scope For v1
 
