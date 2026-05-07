@@ -81,14 +81,7 @@ Check the response for an event whose `payload.podcast` and `payload.title` matc
 
 ### Environment variables
 
-Set in the datalake Portainer stack — shared with all containers in the stack:
-
-| Variable | Description |
-|---|---|
-| `POCKETCASTS_EMAIL` | Pocketcasts account email |
-| `POCKETCASTS_PASSWORD` | Pocketcasts account password |
-| `DATALAKE_URL` | Set to `http://datalake-api:8000` inside the stack |
-| `DATALAKE_TOKEN` | Shared datalake bearer token |
+`POCKETCASTS_EMAIL`, `POCKETCASTS_PASSWORD`, `DATALAKE_URL`, and `DATALAKE_TOKEN` — all defined in the datalake Portainer stack. See [`docs/features/datalake-jobs/feature.md`](../datalake-jobs/feature.md) for the full list.
 
 ### Cron schedule
 

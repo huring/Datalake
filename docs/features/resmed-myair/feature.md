@@ -76,15 +76,7 @@ Skip the insert if `total > 0`. This makes the script safe to run multiple times
 
 ### Environment variables
 
-Set in the datalake Portainer stack — shared with all containers in the stack:
-
-| Variable | Description |
-|---|---|
-| `MYAIR_EMAIL` | ResMed myAir account email |
-| `MYAIR_PASSWORD` | ResMed myAir account password |
-| `MYAIR_API_URL` | Regional API base URL (default: `https://api.myair.resmed.eu`) |
-| `DATALAKE_URL` | Set to `http://datalake-api:8000` inside the stack |
-| `DATALAKE_TOKEN` | Shared datalake bearer token |
+`MYAIR_EMAIL`, `MYAIR_PASSWORD`, `MYAIR_API_URL`, `DATALAKE_URL`, and `DATALAKE_TOKEN` — all defined in the datalake Portainer stack. See [`docs/features/datalake-jobs/feature.md`](../datalake-jobs/feature.md) for the full list.
 
 ### Cron schedule
 
