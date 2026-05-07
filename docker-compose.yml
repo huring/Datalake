@@ -28,7 +28,6 @@ services:
     build:
       context: ./jobs
       dockerfile: Dockerfile
-    image: datalake-jobs
     container_name: datalake-jobs
     restart: unless-stopped
     depends_on:
